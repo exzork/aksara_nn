@@ -29,10 +29,11 @@ def start_training():
 btn_training = Button(root, text="Start Training", fg="black", command=start_training).grid(row=3,column=0)
 
 def select_image_predict():
-    path_new = fd.askopenfilename(title="Pilih gambar yang akan diprediksi", initialdir="/")
+    path_new = fd.askopenfilename(title="Pilih gambar yang akan diprediksi", initialdir="./")
     img_original_new_cv = cv2.imread(path_new)
     
     img_original_new_cv_200 = cv2.resize(img_original_new_cv,(200,200),cv2.INTER_NEAREST)
+    img_original_new_cv_200 = cv2.cvtColor(img_original_new_cv_200,cv2.COLOR_BGR2RGB)
     img_original_new = ImageTk.PhotoImage(image=Image.fromarray(img_original_new_cv_200))
     label_original_img.configure(image=img_original_new)
     label_original_img.image=img_original_new

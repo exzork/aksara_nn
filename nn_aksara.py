@@ -24,9 +24,10 @@ class nn_aksara:
     dataset_dir = "./dataset/"
 
     labels = [name for name in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, name))]
+    dataset_count = sum([len(files) for r, d, files in os.walk("./dataset/")])
 
-    datasetX = np.zeros((260,900))
-    datasetY = np.zeros((260,20))
+    datasetX = np.zeros((dataset_count,900))
+    datasetY = np.zeros((dataset_count,20))
 
     hanacara_loc = ["ha","na","ca","ra","ka",
                     "da","ta","sa","wa","la",
