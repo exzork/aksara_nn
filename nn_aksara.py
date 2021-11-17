@@ -1,54 +1,77 @@
-import numpy
+from tkinter.constants import S
+import numpy as np
 from backpropagation import NeuralNetwork
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
 import os
-import random
 import cv2
 import pickle
 
-def normalize_1d(image):
-  image_1d = image.flatten()
-  f = lambda image_1d: image_1d/255
-  image_normalize_1d = f(image_1d) 
-  return image_normalize_1d
+from prepare_dataset import prepare_dataset
 
-dataset_dir = "./dataset_30x30/"
+class nn_aksara:
+  
+  @staticmethod
+  def normalize_1d(image):
+    image_1d = image.flatten()
+    f = lambda image_1d: image_1d/255
+    image_normalize_1d = f(image_1d) 
+    return image_normalize_1d
 
-labels = [name for name in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, name))]
+  @staticmethod
+  def training():
+    dataset_dir = "./dataset/"
 
-datasetX = numpy.zeros((260,900))
-datasetY = numpy.zeros((260,20))
+    labels = [name for name in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, name))]
 
-hanacara_loc = ["ha","na","ca","ra","ka",
-                "da","ta","sa","wa","la",
-                "pa","dha","ja","ya","nya",
-                "ma","ga","ba","tha","nga"]
+    datasetX = np.zeros((260,900))
+    datasetY = np.zeros((260,20))
 
-x=0
-for label in labels:
-    for filename in os.listdir(dataset_dir+label):
-        img_gray = cv2.imread(dataset_dir+label+"/"+filename,0)
-        normalize = numpy.asarray(normalize_1d(img_gray))
-        datasetX[x,] = normalize
-        arrayY = numpy.zeros((20,))
-        arrayY[hanacara_loc.index(label)] = 1
-        datasetY[x,] = arrayY
-        x+=1
+    hanacara_loc = ["ha","na","ca","ra","ka",
+                    "da","ta","sa","wa","la",
+                    "pa","dha","ja","ya","nya",
+                    "ma","ga","ba","tha","nga"]
 
-(trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, stratify=datasetY, test_size=0.3, random_state=1)
+    x=0
+    for label in labels:
+        for filename in os.listdir(dataset_dir+label):
+            img_to_preprocess = cv2.imread(dataset_dir+label+"/"+filename)
+            img_preprocessed = prepare_dataset.preprocess(img_to_preprocess)
+            normalize = np.asarray(nn_aksara.normalize_1d(img_preprocessed))
+            datasetX[x,] = normalize
+            arrayY = np.zeros((20,))
+            arrayY[hanacara_loc.index(label)] = 1
+            datasetY[x,] = arrayY
+            x+=1
 
-nn = NeuralNetwork([trainX.shape[1],120,60,20])
-print("Training....")
-print("[INFO] {}".format(nn))
-nn.fit(trainX,trainY,epoch=1000)
+    (trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, stratify=datasetY, test_size=0.3, random_state=1)
 
-filename_model = "model-aksara.pickel"
-pickle.dump(nn, open(filename_model,'wb'))
+    model = NeuralNetwork([trainX.shape[1],120,60,20])
+    print("Training....")
+    print("[INFO] {}".format(model))
+    model.fit(trainX,trainY,epoch=1000)
 
-print("Evaluating...")
-predictions = nn.predict(testX)
-predictions = predictions.argmax(axis=1)
-print(classification_report(testY.argmax(axis=1),predictions))
+    pickle.dump(model, open("model-aksara.pickle",'wb'))
 
+    print("Evaluating...")
+    predictions = model.predict(testX)
+    predictions = predictions.argmax(axis=1)
+    print(classification_report(testY.argmax(axis=1),predictions))
+
+  @staticmethod
+  def prediction(image)->str:
+    hanacara_loc = ["ha","na","ca","ra","ka",
+                    "da","ta","sa","wa","la",
+                    "pa","dha","ja","ya","nya",
+                    "ma","ga","ba","tha","nga"]
+    model = pickle.load(open("model-aksara.pickle",'rb'))
+
+    img_preprocessed = prepare_dataset.preprocess(image)
+    img_1d = nn_aksara.normalize_1d(img_preprocessed)
+    predict_arr = np.zeros((1,900))
+    predict_arr[0,] = img_1d
+
+    predictions = model.predict(predict_arr)
+    prediction_str = hanacara_loc[np.argmax(predictions[0])]
+    return prediction_str
