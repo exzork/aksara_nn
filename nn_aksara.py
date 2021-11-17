@@ -6,6 +6,7 @@ from sklearn.metrics import classification_report
 import os
 import random
 import cv2
+import pickle
 
 def normalize_1d(image):
   image_1d = image.flatten()
@@ -17,8 +18,8 @@ dataset_dir = "./dataset_30x30/"
 
 labels = [name for name in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, name))]
 
-datasetX = numpy.zeros((100,900))
-datasetY = numpy.zeros((100,20))
+datasetX = numpy.zeros((260,900))
+datasetY = numpy.zeros((260,20))
 
 hanacara_loc = ["ha","na","ca","ra","ka",
                 "da","ta","sa","wa","la",
@@ -36,16 +37,18 @@ for label in labels:
         datasetY[x,] = arrayY
         x+=1
 
-(trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, test_size=0.2)
+(trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, stratify=datasetY, test_size=0.3, random_state=1)
 
 nn = NeuralNetwork([trainX.shape[1],120,60,20])
 print("Training....")
 print("[INFO] {}".format(nn))
 nn.fit(trainX,trainY,epoch=1000)
 
+filename_model = "model-aksara.pickel"
+pickle.dump(nn, open(filename_model,'wb'))
+
 print("Evaluating...")
 predictions = nn.predict(testX)
 predictions = predictions.argmax(axis=1)
-print(predictions)
 print(classification_report(testY.argmax(axis=1),predictions))
 

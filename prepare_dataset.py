@@ -1,5 +1,8 @@
 import cv2
 import numpy as np
+import math
+import scipy.ndimage as ndi
+from skimage import morphology
 
 dataset_dir = "./dataset/"
 
@@ -57,16 +60,20 @@ def preprocess(label,filename):
     img2 = cv2.copyMakeBorder(img_cropped,round(s/2),round(s/2),0,0,cv2.BORDER_CONSTANT)
   elif wc<hc:
     img2 = cv2.copyMakeBorder(img_cropped,0,0,round(s/2),round(s/2),cv2.BORDER_CONSTANT)
+  
+  max_unit = max(hc,wc)
+  dilate_by = math.ceil(max_unit/30)+2
+  kernel_dilate = np.ones((dilate_by, dilate_by), 'uint8')
+  
+  img2 = cv2.dilate(img2,kernel_dilate,iterations=1)
   img2 = cv2.resize(img2,(30,30),cv2.INTER_AREA)
-  #img2 = cv2.threshold(img2, 127, 255, cv2.THRESH_BINARY)[1]
+  img2 = cv2.threshold(img2, 127, 255, cv2.THRESH_BINARY)[1]
 
   if not os.path.exists("./dataset_30x30/"):
       os.makedirs(os.path.dirname("./dataset_30x30/"))
   if not os.path.exists("./dataset_30x30/"+label):
       os.makedirs("./dataset_30x30/"+label)
-  
   cv2.imwrite("./dataset_30x30/"+label+"/"+filename,img2)
-
 for label in labels:
   for filename in os.listdir(dataset_dir+label):
     preprocess(label,filename)
