@@ -48,7 +48,9 @@ class nn_aksara:
 
     (trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, stratify=datasetY, test_size=0.3, random_state=1)
 
-    model = NeuralNetwork([trainX.shape[1],120,60,20])
+    #model = NeuralNetwork([trainX.shape[1],120,60,20])
+    model = NeuralNetwork([trainX.shape[1],300,120,20])
+    
     print("Training....")
     print("[INFO] {}".format(model))
     model.fit(trainX,trainY,epoch=1000)
