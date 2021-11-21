@@ -20,7 +20,7 @@ class nn_aksara:
     return image_normalize_1d
 
   @staticmethod
-  def training():
+  def training(epoch):
     dataset_dir = "./dataset/"
 
     labels = [name for name in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, name))]
@@ -51,11 +51,10 @@ class nn_aksara:
     (trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, stratify=datasetY, test_size=0.3, random_state=1)
 
     model = NeuralNetwork([trainX.shape[1],120,60,20])
-    #model = NeuralNetwork([trainX.shape[1],300,100,20])
     
     print("Training....")
     print("[INFO] {}".format(model))
-    model.fit(trainX,trainY,epoch=5000)
+    model.fit(trainX,trainY,epoch)
 
     pickle.dump(model, open("model-aksara.pickle",'wb'))
 

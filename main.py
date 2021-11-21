@@ -24,9 +24,11 @@ label_original_img = Label(root,image=img_original)
 label_original_img.grid(row=1,column=0,rowspan=2)
 
 def start_training():
-    nn_aksara.training()
+    nn_aksara.training(epoch=epoch)
 
-btn_training = Button(root, text="Start Training", fg="black", command=start_training).grid(row=3,column=0)
+label_epoch = Label(root,text="Epoch : ",anchor='e').grid(sticky=E, row=3,column=0)
+epoch = Text(root,height=1,width=10).grid(sticky=W,row=3,column=1)
+btn_training = Button(root, text="Start Training", fg="black", command=start_training,width=50).grid(row=4,column=0,columnspan=2)
 
 def select_image_predict():
     path_new = fd.askopenfilename(title="Pilih gambar yang akan diprediksi", initialdir="./")
@@ -50,10 +52,10 @@ def select_image_predict():
     label_predicted.configure(text=predicted_text)
     label_predicted.text=predicted_text
 
-btn_select_file = Button(root, text="Pilih Gambar dan Prediksi",fg="black",command=select_image_predict).grid(row=3,column=1)
+btn_select_file = Button(root, text="Pilih Gambar dan Prediksi",fg="black",command=select_image_predict,width=50).grid(row=5,column=0,columnspan=2)
 
-label_predicted_text = Label(root,text="Prediksi Aksara : ",anchor="e").grid(sticky=E,row=4,column=0)
+label_predicted_text = Label(root,text="Prediksi Aksara : ",anchor="e").grid(sticky=E,row=6,column=0)
 label_predicted = Label(root,text="",anchor="w")
-label_predicted.grid(sticky=W, row=4,column=1)
+label_predicted.grid(sticky=W, row=6,column=1)
 
 root.mainloop()

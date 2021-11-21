@@ -26,7 +26,7 @@ class prepare_dataset:
         if img1[y,x]==255:
           if x>=x2:
             x2=x
-          elif y>=y2:
+          if y>=y2:
             y2=y
 
     for y in range(h-1,0,-1):
@@ -34,7 +34,7 @@ class prepare_dataset:
         if img1[y,x]==255:
           if x<=x1:
             x1=x
-          elif y<=y1:
+          if y<=y1:
             y1=y
 
     x2+=1
@@ -61,5 +61,4 @@ class prepare_dataset:
     img2 = cv2.dilate(img2,kernel_dilate,iterations=1)
     img2 = cv2.resize(img2,(30,30), interpolation=cv2.INTER_AREA)
     img2 = cv2.threshold(img2, 127, 255, cv2.THRESH_BINARY)[1]
-
     return img2    
