@@ -25,7 +25,7 @@ label_original_img.grid(row=1,column=0,rowspan=2)
 
 def start_training():
     epoch = epoch_text.get("1.0",END)
-    nn_aksara.training(epoch=epoch)
+    nn_aksara.training(epoch=int(epoch))
 
 label_epoch = Label(root,text="Epoch : ",anchor='e').grid(sticky=E, row=3,column=0)
 epoch_text = Text(root,height=1,width=10)
