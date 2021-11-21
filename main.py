@@ -24,10 +24,12 @@ label_original_img = Label(root,image=img_original)
 label_original_img.grid(row=1,column=0,rowspan=2)
 
 def start_training():
+    epoch = epoch_text.get("1.0",END)
     nn_aksara.training(epoch=epoch)
 
 label_epoch = Label(root,text="Epoch : ",anchor='e').grid(sticky=E, row=3,column=0)
-epoch = Text(root,height=1,width=10).grid(sticky=W,row=3,column=1)
+epoch_text = Text(root,height=1,width=10)
+epoch_text.grid(sticky=W,row=3,column=1)
 btn_training = Button(root, text="Start Training", fg="black", command=start_training,width=50).grid(row=4,column=0,columnspan=2)
 
 def select_image_predict():
