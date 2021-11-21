@@ -45,8 +45,8 @@ class nn_aksara:
             arrayY = np.zeros((20,))
             arrayY[hanacara_loc.index(label)] = 1
             datasetY[x,] = arrayY
-            print("Preprocessing data {:.2f}% complete.".format((x/dataset_count)*100),end='\r')
             x+=1
+            print("Preprocessing data {:.2f}% complete.".format((x/dataset_count)*100),end='\r')
 
     (trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, stratify=datasetY, test_size=0.3, random_state=1)
 
