@@ -51,8 +51,8 @@ class nn_aksara:
 
     (trainX, testX, trainY, testY) = train_test_split(datasetX,datasetY, stratify=datasetY, test_size=0.3, random_state=1)
 
-    #model = NeuralNetwork([trainX.shape[1],120,60,20])
-    model = MLPClassifier(hidden_layer_sizes=(120,60),random_state=100,n_iter_no_change=epoch,max_iter=epoch,verbose=True)
+    model = NeuralNetwork([trainX.shape[1],120,60,20])
+    #model = MLPClassifier(hidden_layer_sizes=(120,60),random_state=100,n_iter_no_change=epoch,max_iter=epoch,verbose=True)
 
     print("Training....")
     print("[INFO] {}".format(model))

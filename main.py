@@ -9,6 +9,7 @@ from tkinter import filedialog as fd
 
 #prepare_dataset.prepare("./dataset/") 
 root = Tk()
+root.option_add('*Font', '19')
 root.title("Pengenalan Aksara Jawa dengan Backpropagation")
 
 

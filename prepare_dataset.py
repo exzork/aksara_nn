@@ -3,6 +3,8 @@ import cv2
 import numpy as np
 import math
 import os
+import scipy as sp
+import scipy.ndimage
 
 class prepare_dataset:
 
@@ -55,10 +57,27 @@ class prepare_dataset:
       img2 = cv2.copyMakeBorder(img_cropped,0,0,round(s/2),round(s/2),cv2.BORDER_CONSTANT)
     
     max_unit = max(hc,wc)
-    dilate_by = math.ceil(max_unit/30)+2
+    dilate_by = math.ceil(max_unit/30)+1
     kernel_dilate = np.ones((dilate_by, dilate_by), 'uint8')
     
     img2 = cv2.dilate(img2,kernel_dilate,iterations=1)
+    img2 = flood_fill(img2)
+
     img2 = cv2.resize(img2,(30,30), interpolation=cv2.INTER_AREA)
     img2 = cv2.threshold(img2, 127, 255, cv2.THRESH_BINARY)[1]
+    
     return img2    
+
+def flood_fill(test_array,h_max=255):
+    input_array = np.copy(test_array) 
+    el = sp.ndimage.generate_binary_structure(2,2).astype(np.int)
+    inside_mask = sp.ndimage.binary_erosion(~np.isnan(input_array), structure=el)
+    output_array = np.copy(input_array)
+    output_array[inside_mask]=h_max
+    output_old_array = np.copy(input_array)
+    output_old_array.fill(0)   
+    el = sp.ndimage.generate_binary_structure(2,1).astype(np.int)
+    while not np.array_equal(output_old_array, output_array):
+        output_old_array = np.copy(output_array)
+        output_array = np.maximum(input_array,sp.ndimage.grey_erosion(output_array, size=(3,3), footprint=el))
+    return output_array
