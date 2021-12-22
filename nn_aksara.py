@@ -58,6 +58,48 @@ class nn_aksara:
     print("[INFO] {}".format(model))
     #model.fit(trainX,trainY)
     model.fit(trainX,trainY,epoch)
+    '''
+    Training....g data 100.00% complete.
+    [INFO] NeuralNetwork:900-120-60-20
+    [INFO] epoch=1, loss=161.5051790
+    [INFO] epoch=10, loss=158.7165370
+    [INFO] epoch=20, loss=141.4222750
+    [INFO] epoch=30, loss=87.9702123
+    [INFO] epoch=40, loss=37.4046784
+    [INFO] epoch=50, loss=13.5584285
+    [INFO] epoch=60, loss=6.6294976
+    [INFO] epoch=70, loss=4.0655959
+    [INFO] epoch=80, loss=3.0324983
+    [INFO] epoch=90, loss=2.2622402
+    [INFO] epoch=100, loss=1.7263422
+    Evaluating...
+                  precision    recall  f1-score   support
+
+               0       0.80      0.50      0.62         8
+               1       1.00      1.00      1.00         8
+               2       1.00      0.75      0.86         8
+               3       1.00      0.88      0.93         8
+               4       0.67      0.75      0.71         8
+               5       0.89      1.00      0.94         8
+               6       0.78      0.88      0.82         8
+               7       0.80      1.00      0.89         8
+               8       0.86      0.75      0.80         8
+               9       1.00      0.75      0.86         8
+              10       0.83      0.62      0.71         8
+              11       0.88      0.88      0.88         8
+              12       0.89      1.00      0.94         8
+              13       0.80      1.00      0.89         8
+              14       1.00      0.88      0.93         8
+              15       0.73      1.00      0.84         8
+              16       0.80      1.00      0.89         8
+              17       1.00      1.00      1.00         8
+              18       1.00      0.62      0.77         8
+              19       0.70      0.88      0.78         8
+
+         accuracy                           0.86       160
+        macro avg       0.87      0.86      0.85       160
+     weighted avg       0.87      0.86      0.85       160
+    '''
 
     pickle.dump(model, open("model-aksara.pickle",'wb'))
 
@@ -65,7 +107,7 @@ class nn_aksara:
     predictions = model.predict(testX)
     predictions = predictions.argmax(axis=1)
     print(classification_report(testY.argmax(axis=1),predictions))
-
+    
   @staticmethod
   def prediction(image)->str:
     hanacara_loc = ["ha","na","ca","ra","ka",
