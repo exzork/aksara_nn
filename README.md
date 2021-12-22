@@ -1,2 +1,2 @@
-Pertama install requirements
-pip install -r requirements.txt
+Pertama install requirements <br>
+<code>pip install -r requirements.txt</code>
